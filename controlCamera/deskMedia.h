@@ -54,16 +54,16 @@ private:
 
 	enum MyEnum
 	{
-		_NULL=0,
+		_NULL = 0,
 		_Play,
 		_IsOver,
 		_WaitForTrans,
 		_WaitForTransEnd
 	};
-	int				m_nStatus=0;
+	int				m_nStatus = 0;
 	int             m_iIsOverNum = 0;
 	vector<string> m_vecStrMedia;
 	vector<string> m_vecStrMediaName;
-	vector<CQueue*> m_vecQueue,n_vecQueue;
+	vector<CQueue*> m_vecQueue, n_vecQueue;
 };
 
