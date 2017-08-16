@@ -1,0 +1,117 @@
+﻿Build started 2017/8/16 16:59:42.
+     1>Project "D:\XiaMen_厦门\controlCamera\controlCamera\controlCamera.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         D:\software\visual_studio_ultimate_2013\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D BOOST_ALL_DYN_LINK /D _CRT_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt deskMedia.cpp FastUDP\MFastUDP.cpp FastUDP\MParamReader.cpp machineReader.cpp main.cpp remapImage.cpp
+         remapImage.cpp
+         main.cpp
+     1>d:\xiamen_厦门\controlcamera\controlcamera\pm_hub.h(85): warning C4251: 'PM_Hub::m_baseItem' : class 'std::vector<BaseItem *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'PM_Hub'
+                 with
+                 [
+                     _Ty=BaseItem *
+                 ]
+     1>d:\xiamen_厦门\controlcamera\controlcamera\pm_hub.h(86): warning C4251: 'PM_Hub::m_lock' : class 'boost::mutex' needs to have dll-interface to be used by clients of class 'PM_Hub'
+                 c:\3rdparty\boost\boost\thread\win32\mutex.hpp(25) : see declaration of 'boost::mutex'
+     1>d:\xiamen_厦门\controlcamera\controlcamera\pm_hub.h(94): warning C4251: 'PM_Hub::m_vecQIDerase' : class 'std::vector<int,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'PM_Hub'
+                 with
+                 [
+                     _Ty=int
+                 ]
+     1>d:\xiamen_厦门\controlcamera\controlcamera\pm_hub.h(109): warning C4251: 'PM_Hub::m_mapFeedback' : class 'std::map<std::string,int,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'PM_Hub'
+                 with
+                 [
+                     _Kty=std::string
+         ,            _Ty=int
+                 ]
+     1>d:\xiamen_厦门\controlcamera\controlcamera\pm_hub.h(111): warning C4251: 'PM_Hub::m_feedbackTempMedia' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'PM_Hub'
+     1>d:\xiamen_厦门\controlcamera\controlcamera\pm_hub.h(115): warning C4251: 'PM_Hub::uniqueIdZ' : class 'std::map<int,LONGLONG,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'PM_Hub'
+                 with
+                 [
+                     _Kty=int
+         ,            _Ty=LONGLONG
+                 ]
+     1>d:\xiamen_厦门\controlcamera\controlcamera\pm_hub.h(116): warning C4251: 'PM_Hub::m_ListID' : class 'std::list<int,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'PM_Hub'
+                 with
+                 [
+                     _Ty=int
+                 ]
+     1>d:\xiamen_厦门\controlcamera\controlcamera\pm_hub.h(117): warning C4251: 'PM_Hub::m_szSendID' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'PM_Hub'
+     1>d:\xiamen_厦门\controlcamera\controlcamera\pm_hub.h(118): warning C4251: 'PM_Hub::m_szReceiveID' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'PM_Hub'
+     1>d:\xiamen_厦门\controlcamera\controlcamera\pm_hub.h(119): warning C4251: 'PM_Hub::m_szSUMSHeader' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'PM_Hub'
+         machineReader.cpp
+         Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+         - add -D_WIN32_WINNT=0x0501 to the compiler command line; or
+         - add _WIN32_WINNT=0x0501 to your project's Preprocessor Definitions.
+         Assuming _WIN32_WINNT=0x0501 (i.e. Windows XP target).
+     1>d:\xiamen_厦门\controlcamera\controlcamera\fastudp\mparamreader.h(13): warning C4005: 'MAX' : macro redefinition
+                 d:\software\opencv2.4.10\build\include\opencv2\core\types_c.h(291) : see previous definition of 'MAX'
+     1>d:\xiamen_厦门\controlcamera\controlcamera\machinereader.cpp(31): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>d:\xiamen_厦门\controlcamera\controlcamera\machinereader.cpp(69): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>d:\xiamen_厦门\controlcamera\controlcamera\machinereader.cpp(79): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+         MParamReader.cpp
+         MFastUDP.cpp
+         Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+         - add -D_WIN32_WINNT=0x0501 to the compiler command line; or
+         - add _WIN32_WINNT=0x0501 to your project's Preprocessor Definitions.
+         Assuming _WIN32_WINNT=0x0501 (i.e. Windows XP target).
+     1>d:\xiamen_厦门\controlcamera\controlcamera\fastudp\mfastudp.cpp(21): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\xiamen_厦门\controlcamera\controlcamera\fastudp\mfastudp.cpp(89): warning C4018: '<' : signed/unsigned mismatch
+         deskMedia.cpp
+     1>d:\xiamen_厦门\controlcamera\controlcamera\pm_hub.h(85): warning C4251: 'PM_Hub::m_baseItem' : class 'std::vector<BaseItem *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'PM_Hub'
+                 with
+                 [
+                     _Ty=BaseItem *
+                 ]
+     1>d:\xiamen_厦门\controlcamera\controlcamera\pm_hub.h(86): warning C4251: 'PM_Hub::m_lock' : class 'boost::mutex' needs to have dll-interface to be used by clients of class 'PM_Hub'
+                 c:\3rdparty\boost\boost\thread\win32\mutex.hpp(25) : see declaration of 'boost::mutex'
+     1>d:\xiamen_厦门\controlcamera\controlcamera\pm_hub.h(94): warning C4251: 'PM_Hub::m_vecQIDerase' : class 'std::vector<int,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'PM_Hub'
+                 with
+                 [
+                     _Ty=int
+                 ]
+     1>d:\xiamen_厦门\controlcamera\controlcamera\pm_hub.h(109): warning C4251: 'PM_Hub::m_mapFeedback' : class 'std::map<std::string,int,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'PM_Hub'
+                 with
+                 [
+                     _Kty=std::string
+         ,            _Ty=int
+                 ]
+     1>d:\xiamen_厦门\controlcamera\controlcamera\pm_hub.h(111): warning C4251: 'PM_Hub::m_feedbackTempMedia' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'PM_Hub'
+     1>d:\xiamen_厦门\controlcamera\controlcamera\pm_hub.h(115): warning C4251: 'PM_Hub::uniqueIdZ' : class 'std::map<int,LONGLONG,std::less<_Kty>,std::allocator<std::pair<const _Kty,_Ty>>>' needs to have dll-interface to be used by clients of class 'PM_Hub'
+                 with
+                 [
+                     _Kty=int
+         ,            _Ty=LONGLONG
+                 ]
+     1>d:\xiamen_厦门\controlcamera\controlcamera\pm_hub.h(116): warning C4251: 'PM_Hub::m_ListID' : class 'std::list<int,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'PM_Hub'
+                 with
+                 [
+                     _Ty=int
+                 ]
+     1>d:\xiamen_厦门\controlcamera\controlcamera\pm_hub.h(117): warning C4251: 'PM_Hub::m_szSendID' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'PM_Hub'
+     1>d:\xiamen_厦门\controlcamera\controlcamera\pm_hub.h(118): warning C4251: 'PM_Hub::m_szReceiveID' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'PM_Hub'
+     1>d:\xiamen_厦门\controlcamera\controlcamera\pm_hub.h(119): warning C4251: 'PM_Hub::m_szSUMSHeader' : class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'PM_Hub'
+     1>d:\xiamen_厦门\controlcamera\controlcamera\deskmedia.cpp(188): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\xiamen_厦门\controlcamera\controlcamera\deskmedia.cpp(196): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\xiamen_厦门\controlcamera\controlcamera\deskmedia.cpp(256): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\xiamen_厦门\controlcamera\controlcamera\deskmedia.cpp(260): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>d:\xiamen_厦门\controlcamera\controlcamera\deskmedia.cpp(277): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\xiamen_厦门\controlcamera\controlcamera\deskmedia.cpp(285): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\xiamen_厦门\controlcamera\controlcamera\deskmedia.cpp(289): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>d:\xiamen_厦门\controlcamera\controlcamera\deskmedia.cpp(301): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\xiamen_厦门\controlcamera\controlcamera\deskmedia.cpp(305): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>d:\xiamen_厦门\controlcamera\controlcamera\deskmedia.cpp(322): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\xiamen_厦门\controlcamera\controlcamera\deskmedia.cpp(330): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\xiamen_厦门\controlcamera\controlcamera\deskmedia.cpp(334): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+         Generating Code...
+       Link:
+         D:\software\visual_studio_ultimate_2013\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\XiaMen_厦门\controlCamera\Debug\controlCamera.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\3rdparty\boost\lib /LIBPATH:\lib kinect20.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\XiaMen_厦门\controlCamera\Debug\controlCamera.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\XiaMen_厦门\controlCamera\Debug\controlCamera.lib" /MACHINE:X86 Debug\deskMedia.obj
+         Debug\MFastUDP.obj
+         Debug\MParamReader.obj
+         Debug\machineReader.obj
+         Debug\main.obj
+         Debug\remapImage.obj
+         controlCamera.vcxproj -> D:\XiaMen_厦门\controlCamera\Debug\controlCamera.exe
+     1>Done Building Project "D:\XiaMen_厦门\controlCamera\controlCamera\controlCamera.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:11.04
