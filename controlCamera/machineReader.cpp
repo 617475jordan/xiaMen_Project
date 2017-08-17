@@ -28,7 +28,7 @@ void machineReader::currentPosition(float position)
 	*/
 	m_fSpeend = m_fCurrentPosition - m_fOriginalPosition;
 	//cout << "m_fSpeend:" << m_fSpeend << endl;
-	m_fSpeend = -1.0*m_fSpeend;
+	//m_fSpeend = -1.0*m_fSpeend;
 	//cout << "m_fSpeend:" << m_fSpeend << endl;
 	if (m_fSpeend > 0)
 	{

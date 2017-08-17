@@ -3,12 +3,16 @@
 #include "deskMedia.h"
 #include "PM_Hub.h"
 
+string m_strPath = "..\\data\\initialize.txt";
+string m_strMainMedia = "..\\data\\MainMedia.txt";
+string m_strCommonMedia = "..\\data\\CommonMedia.txt";
+
 int main()
 {
 	machineReader machineReader;
 	deskMedia deskMedia;
 	PM_Hub *g_PM_Hub = new PM_Hub("testPlayer");
-	deskMedia.Initialize(g_PM_Hub, "..\\data\\playVideo.txt");//运行视频停止于第0帧
+	deskMedia.Initialize(g_PM_Hub, m_strPath, m_strMainMedia, m_strCommonMedia);
 	  
 	deskMedia.run(1);
 	machineReader.Initialize();                               //旋转编码器初始化
@@ -23,8 +27,6 @@ int main()
 		{
 			deskMedia.run(-1);
 		}
-		//	cout << "isOk:" << machineReader.isOK() << endl;
-		//	cout << "Flag:" << machineReader.currentPositionFlag() << endl;
 	}
 	return 0;
 }

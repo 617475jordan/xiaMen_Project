@@ -25,45 +25,45 @@ public:
 	~deskMedia();
 
 	int  run(int flag);
-	int  help(string m_strPath);
+	int  help(string m_strPath,string m_strMainMedia,string m_strCommonMedia);
 
-	bool isOver();
+	bool isOver(int m_iFlag);
 
 	void clear();
 	void queueMQ();
 	void queueML();
 	void queueNQ();
 	void queueNL();
-	void Initialize(PM_Hub * g_PM_Hub, string m_strPath);
+	void Initialize(PM_Hub * g_PM_Hub, string m_strPath, string m_strMainMedia, string m_strCommonMedia);
 	bool getQueueId(int m_queueId, string m_strCurrentMediaName);
 	bool getBool(bool m_bFlag);
 	void transToMedia(int m_iFlag);
 private:
-	PM_Hub * m_PM_Hub;
+	enum MyEnum
+	{
+		_NULL=0,
+		_Play,
+		_IsOver,
+		_WaitForTrans,
+		_WaitForTransEnd
+	};
+	int				m_nStatus=0;
+	int             m_iIsOverNum = 0;
 
 	int  m_iClientID, m_iRectWidth, m_iRectHeight, m_iFps;
 	//int m_iSoloClient
 	int  m_iCurrentMediaId = -1;
 	int  m_iMaxMediaId;
 	int  m_iMinMediaId = 0;
-	int  m_iFileId = 3;
-	int  m_iMediaNum = 3;
-
+	int  m_iFileId = 4;
+	int  m_iMediaNum;
 	bool m_bParity;                  //奇偶位标志，初始化false
 	bool m_bFirstCircleFlag;              //表示是否为第一圈,false
+	bool m_bMainMediaOverFlag = false;
 
-	enum MyEnum
-	{
-		_NULL = 0,
-		_Play,
-		_IsOver,
-		_WaitForTrans,
-		_WaitForTransEnd
-	};
-	int				m_nStatus = 0;
-	int             m_iIsOverNum = 0;
+	PM_Hub * m_PM_Hub;
 	vector<string> m_vecStrMedia;
-	vector<string> m_vecStrMediaName;
-	vector<CQueue*> m_vecQueue, n_vecQueue;
+	vector<string> m_vecStrCommonMediaName, m_vecStrMainMediaName;
+	vector<CQueue*> m_vecQueue,n_vecQueue,m_vecMainQueue;
 };
 

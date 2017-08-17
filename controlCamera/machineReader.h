@@ -17,7 +17,7 @@ private:
 	float                  m_fCurrentPosition;
 	float                  m_fOriginalPosition;
 	float                  m_fSpeend;
-	float                  m_fThreshold = 50;//旋转角度阈值
+	float                  m_fThreshold = 20;//旋转角度阈值
 
 	int                    m_fCurrentPositionFlag;
 	int                    m_iLen;

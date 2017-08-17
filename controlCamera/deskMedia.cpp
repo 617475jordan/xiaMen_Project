@@ -5,56 +5,78 @@ deskMedia::deskMedia()
 {
 	m_bParity = true;
 	m_vecStrMedia.clear();
-	m_vecStrMediaName.clear();
+	m_vecStrCommonMediaName.clear();
 	m_bFirstCircleFlag = false;
 }
 deskMedia::~deskMedia()
 {
 	m_bParity = true;
 	m_vecStrMedia.clear();
-	m_vecStrMediaName.clear();
+	m_vecStrCommonMediaName.clear();
 	m_bFirstCircleFlag = false;
 
 }
-int deskMedia::help(string m_strPath)
+int  deskMedia::help(string m_strPath, string m_strMainMedia, string m_strCommonMedia)
 {
+	string m_strFile;
 	m_vecStrMedia.clear();
-	m_vecStrMediaName.clear();
+	m_vecStrCommonMediaName.clear();
+	m_vecStrMainMediaName.clear();
+
 	ifstream infile;//定义文件变量  
 	infile.open(m_strPath, ios::in);//打开txtPath为文件路径  
 	if (!infile)
 	{
 		return -1;
 	}
-	string m_strFile;
-	int n_icount = 0;
+	
 	while (getline(infile, m_strFile)) //读取一行，while循环，直到文件最后一行  
 	{
-		if (n_icount <= 3)
-		{
-			m_vecStrMedia.push_back(m_strFile);
-		}
+
+		m_vecStrMedia.push_back(m_strFile);
+	}
+	infile.close();//关闭文件 
+	
+	infile.open(m_strCommonMedia, ios::in);//打开txtPath为文件路径  
+	if (!infile)
+	{
+		return -1;
 	}
 
-	infile.close();//关闭文件 
-	infile.open("..\\data\\name.txt", ios::in);
-	while (getline(infile, m_strFile))
+	while (getline(infile, m_strFile)) //读取一行，while循环，直到文件最后一行  
 	{
-		m_vecStrMediaName.push_back(m_strFile);
+
+		m_vecStrCommonMediaName.push_back(m_strFile);
 	}
+	infile.close();//关闭文件 
+
+	infile.open(m_strMainMedia, ios::in);//打开txtPath为文件路径  
+	if (!infile)
+	{
+		return -1;
+	}
+
+	while (getline(infile, m_strFile)) //读取一行，while循环，直到文件最后一行  
+	{
+		m_vecStrMainMediaName.push_back(m_strFile);
+	}
+	infile.close();//关闭文件 
+
 	m_iClientID = atoi(m_vecStrMedia[0].c_str());
 	m_iRectWidth = atoi(m_vecStrMedia[1].c_str());
 	m_iRectHeight = atoi(m_vecStrMedia[2].c_str());
 	m_iFps = atoi(m_vecStrMedia[3].c_str());
+	m_iMediaNum = atoi(m_vecStrMedia[4].c_str());
 
 	m_iCurrentMediaId = -1;
 	m_iMinMediaId = 0;
-	m_iMaxMediaId = m_vecStrMediaName.size() / m_iMediaNum / 2;
+	m_iMaxMediaId = m_vecStrCommonMediaName.size() / m_iMediaNum / 2;
+
 	return 0;
 }
-void deskMedia::Initialize(PM_Hub * g_PM_Hub, string path)
+void deskMedia::Initialize(PM_Hub * g_PM_Hub, string m_strPath, string m_strMainMedia, string m_strCommonMedia)
 {
-	help(path);
+	help( m_strPath,  m_strMainMedia,  m_strCommonMedia);
 	m_PM_Hub = g_PM_Hub;
 	m_vecQueue.clear();
 	n_vecQueue.clear();
@@ -64,10 +86,13 @@ void deskMedia::Initialize(PM_Hub * g_PM_Hub, string path)
 		m_vecQueue.push_back(new CQueue(m_PM_Hub));
 		n_vecQueue.push_back(new CQueue(m_PM_Hub));
 	}
+	m_vecMainQueue.push_back(new CQueue(m_PM_Hub));
+	m_vecMainQueue.push_back(new CQueue(m_PM_Hub));
 }
 
 void deskMedia::transToMedia(int m_iFlag)
 {
+	
 	switch (m_iFlag)
 	{
 	case 1:
@@ -97,21 +122,23 @@ void deskMedia::transToMedia(int m_iFlag)
 }
 int deskMedia::run(int m_iFlag)
 {
+	cout << "m_iCurrentMediaId:" << m_iCurrentMediaId << endl;
 	if (m_bParity == false)
 	{
 		switch (m_nStatus)
 		{
 		case _NULL:
+			//m_iIsOverNum = 0;
 			transToMedia(m_iFlag);
 			break;
 		case _Play:
 			queueMQ();
 
-			//Sleep(100);//延时100ms
+			Sleep(500);//延时100ms
 			m_nStatus = _IsOver;
 			break;
 		case _IsOver:
-			isOver();
+			isOver(2);
 			break;
 			//case _WaitForTrans:
 			//	queueML();
@@ -121,7 +148,7 @@ int deskMedia::run(int m_iFlag)
 			//	break;
 		case _WaitForTransEnd:
 			queueML();
-			Sleep(100);//延时100ms
+			//Sleep(100);//延时100ms
 			m_nStatus = _NULL;
 			break;
 		default:
@@ -134,19 +161,20 @@ int deskMedia::run(int m_iFlag)
 		switch (m_nStatus)
 		{
 		case _NULL:
+			//m_iIsOverNum = 0;
 			transToMedia(m_iFlag);
 			break;
 		case _Play:
 			queueNQ();
-			//Sleep(100);//延时100ms
+			Sleep(500);//延时100ms
 			m_nStatus = _IsOver;
 			break;
 		case _IsOver:
-			isOver();
+			isOver(1);
 			break;
 		case _WaitForTransEnd:
 			queueNL();
-			Sleep(100);//延时100ms
+			//Sleep(100);//延时100ms
 			m_nStatus = _NULL;
 			break;
 		default:
@@ -175,30 +203,34 @@ bool deskMedia::getBool(bool m_bFlag)
 /// <returns>	True if over, false if not. </returns>
 ///-------------------------------------------------------------------------------------------------
 
-bool deskMedia::isOver()
+bool deskMedia::isOver(int m_iFlag)
 {
-	if (m_nStatus == _IsOver)
+	if (m_iFlag == 2)
 	{
-		if (m_bParity == true)
+		if (getQueueId(m_vecMainQueue[0]->GetQueueID(), m_vecStrMainMediaName[m_iCurrentMediaId * 2]))
+			m_bMainMediaOverFlag = true;
+		for (unsigned int i = 0; i < n_vecQueue.size(); i++)
 		{
-			for (int i = 0; i < n_vecQueue.size(); i++)
-			{
-				if (getQueueId(n_vecQueue[i]->GetQueueID(), m_vecStrMediaName[m_iCurrentMediaId * m_iMediaNum * 2 + i]))
-					m_iIsOverNum++;
-			}
-		}
-		else if (m_bParity == false)
-		{
-			for (int i = 0; i < m_vecQueue.size(); i++)
-			{
-				if (getQueueId(m_vecQueue[i]->GetQueueID(), m_vecStrMediaName[m_iCurrentMediaId * m_iMediaNum * 2 + i]))
-					m_iIsOverNum++;
-			}
+			if (getQueueId(n_vecQueue[i]->GetQueueID(), m_vecStrCommonMediaName[m_iCurrentMediaId * m_iMediaNum * 2 + i]))
+				m_iIsOverNum++;
 		}
 	}
-	if (m_iIsOverNum >= m_iMediaNum)
+	
+	else if (m_iFlag == 1)
+	{
+		if (getQueueId(m_vecMainQueue[1]->GetQueueID(), m_vecStrMainMediaName[m_iCurrentMediaId * 2]))
+			m_bMainMediaOverFlag = true;
+		for (unsigned int i = 0; i < m_vecQueue.size(); i++)
+		{
+			if (getQueueId(m_vecQueue[i]->GetQueueID(), m_vecStrCommonMediaName[m_iCurrentMediaId * m_iMediaNum * 2 + i]))
+				m_iIsOverNum++;
+		}
+		
+	}
+	if (m_iIsOverNum >= 1 && m_bMainMediaOverFlag==true)
 	{
 		m_iIsOverNum = 0;
+		m_bMainMediaOverFlag = false;
 		m_nStatus = _WaitForTransEnd;
 		return true;
 	}
@@ -234,22 +266,30 @@ bool deskMedia::getQueueId(int m_queueId, string m_strCurrentMediaName)
 
 void deskMedia::queueMQ()
 {
-	for (int i = 0; i < m_vecQueue.size(); i++)
+	if (m_bFirstCircleFlag == false && m_iCurrentMediaId==0)
 	{
-		m_vecQueue[i]->EraseQueue(1);
-		n_vecQueue[i]->EraseQueue(1);
+		for (unsigned int i = 0; i < m_vecQueue.size(); i++)
+		{
+			m_vecQueue[i]->EraseQueue(1);
+		}
+		m_vecMainQueue[0]->EraseQueue(1);
+		m_PM_Hub->SendLoaded();
 	}
-	m_PM_Hub->SendLoaded();
-	//m_queue2->EraseQueue(1);
-	//m_PM_Hub->SendLoaded();//发送使能
-	for (int i = 0; i < m_vecQueue.size(); i++)
+
+	for (unsigned int i = 0; i < m_vecQueue.size(); i++)
 	{
 		m_vecQueue[i]->NewQueue(-1, 1, i + 1, 0, 1);
-		m_vecQueue[i]->AppendQueue(m_vecStrMediaName[i], "cmp", m_iFps, 0, 0, 1, 1);
+		m_vecQueue[i]->AppendQueue(m_vecStrCommonMediaName[m_iCurrentMediaId * m_iMediaNum * 2 + i], "cmp", m_iFps, 0, 0, 1, 1);
 		m_vecQueue[i]->SetCoords(m_iRectWidth / 2, m_iRectHeight / 2, 1, m_iRectWidth / 2, m_iRectHeight / 2, 1);
 		m_vecQueue[i]->SetStartTime(-1, 1);
 		m_vecQueue[i]->MediaSeek(0, 0, 1);
 	}
+
+	m_vecMainQueue[0]->NewQueue(-1, 1, m_vecQueue.size() + 1, 0, 1);
+	m_vecMainQueue[0]->AppendQueue(m_vecStrMainMediaName[m_iCurrentMediaId  * 2], "cmp", m_iFps, 0, 0, 1, 1);
+	m_vecMainQueue[0]->SetCoords(m_iRectWidth / 2, m_iRectHeight / 2, 1, m_iRectWidth / 2, m_iRectHeight / 2, 1);
+	m_vecMainQueue[0]->SetStartTime(-1, 1);
+	m_vecMainQueue[0]->MediaSeek(0, 0, 1);
 
 	m_PM_Hub->SendLoaded();
 
@@ -263,44 +303,61 @@ void deskMedia::queueMQ()
 
 void deskMedia::queueML()
 {
-	for (int i = 0; i < m_vecQueue.size(); i++)
+	for (unsigned int i = 0; i < m_vecQueue.size(); i++)
 	{
 		m_vecQueue[i]->EraseQueue(1);
+	}
+	m_PM_Hub->SendLoaded();//发送使能
+	for (unsigned int i = 0; i < m_vecQueue.size(); i++)
+	{
 		n_vecQueue[i]->EraseQueue(1);
 	}
-
+	m_vecMainQueue[1]->EraseQueue(1);
 	m_PM_Hub->SendLoaded();//发送使能
-
-	for (int i = 0; i < m_vecQueue.size(); i++)
+	for (unsigned int i = 0; i < m_vecQueue.size(); i++)
 	{
 		m_vecQueue[i]->NewQueue(-1, 1, i + 1, 0, 1);
-		m_vecQueue[i]->AppendQueue(m_vecStrMediaName[m_iCurrentMediaId * m_iMediaNum * 2 + i + m_iMediaNum], "cmp", m_iFps, 0, 0, 1, 1);
+		m_vecQueue[i]->AppendQueue(m_vecStrCommonMediaName[m_iCurrentMediaId * m_iMediaNum * 2 + i + m_iMediaNum], "cmp", m_iFps, 0, 0, 1, 1);
 		m_vecQueue[i]->SetCoords(m_iRectWidth / 2, m_iRectHeight / 2, 1, m_iRectWidth / 2, m_iRectHeight / 2, 1);
 		m_vecQueue[i]->SetStartTime(-1, 1);
 		m_vecQueue[i]->MediaSeek(0, 0, 1);
 	}
+
+	m_vecMainQueue[0]->NewQueue(-1, 1, m_vecQueue.size() + 1, 0, 1);
+	m_vecMainQueue[0]->AppendQueue(m_vecStrMainMediaName[m_iCurrentMediaId * m_iMediaNum * 2+1], "cmp", m_iFps, 0, 0, 1, 1);
+	m_vecMainQueue[0]->SetCoords(m_iRectWidth / 2, m_iRectHeight / 2, 1, m_iRectWidth / 2, m_iRectHeight / 2, 1);
+	m_vecMainQueue[0]->SetStartTime(-1, 1);
+	m_vecMainQueue[0]->MediaSeek(0, 0, 1);
+
 	m_PM_Hub->SendLoaded();
 }
 
 
 void deskMedia::queueNQ()
 {
-	for (int i = 0; i < m_vecQueue.size(); i++)
+	/*for (int i = 0; i < m_vecQueue.size(); i++)
 	{
 		m_vecQueue[i]->EraseQueue(1);
 		n_vecQueue[i]->EraseQueue(1);
 	}
-	m_PM_Hub->SendLoaded();
+	m_PM_Hub->SendLoaded();*/
 	//m_queue2->EraseQueue(1);
 	//m_PM_Hub->SendLoaded();//发送使能
-	for (int i = 0; i < n_vecQueue.size(); i++)
+	for (unsigned int i = 0; i < n_vecQueue.size(); i++)
 	{
 		n_vecQueue[i]->NewQueue(-1, 1, i + 1, 0, 1);
-		n_vecQueue[i]->AppendQueue(m_vecStrMediaName[m_iCurrentMediaId * m_iMediaNum * 2 + i], "cmp", m_iFps, 0, 0, 1, 1);
+		n_vecQueue[i]->AppendQueue(m_vecStrCommonMediaName[m_iCurrentMediaId * m_iMediaNum * 2 + i], "cmp", m_iFps, 0, 0, 1, 1);
 		n_vecQueue[i]->SetCoords(m_iRectWidth / 2, m_iRectHeight / 2, 1, m_iRectWidth / 2, m_iRectHeight / 2, 1);
 		n_vecQueue[i]->SetStartTime(-1, 1);
 		n_vecQueue[i]->MediaSeek(0, 0, 1);
 	}
+
+
+	m_vecMainQueue[1]->NewQueue(-1, 1, m_vecQueue.size() + 1, 0, 1);
+	m_vecMainQueue[1]->AppendQueue(m_vecStrMainMediaName[m_iCurrentMediaId  * 2 ], "cmp", m_iFps, 0, 0, 1, 1);
+	m_vecMainQueue[1]->SetCoords(m_iRectWidth / 2, m_iRectHeight / 2, 1, m_iRectWidth / 2, m_iRectHeight / 2, 1);
+	m_vecMainQueue[1]->SetStartTime(-1, 1);
+	m_vecMainQueue[1]->MediaSeek(0, 0, 1);
 
 	m_PM_Hub->SendLoaded();
 
@@ -314,22 +371,34 @@ void deskMedia::queueNQ()
 
 void deskMedia::queueNL()
 {
-	for (int i = 0; i < m_vecQueue.size(); i++)
+	for (unsigned int i = 0; i < m_vecQueue.size(); i++)
 	{
 		m_vecQueue[i]->EraseQueue(1);
-		n_vecQueue[i]->EraseQueue(1);
 	}
 
+	m_vecMainQueue[0]->EraseQueue(1);
+    m_PM_Hub->SendLoaded();//发送使能
+
+	for (unsigned int i = 0; i < m_vecQueue.size(); i++)
+	{
+		n_vecQueue[i]->EraseQueue(1);
+	}
 	m_PM_Hub->SendLoaded();//发送使能
 
-	for (int i = 0; i < n_vecQueue.size(); i++)
+	for (unsigned int i = 0; i < n_vecQueue.size(); i++)
 	{
 		n_vecQueue[i]->NewQueue(-1, 1, i + 1, 0, 1);
-		n_vecQueue[i]->AppendQueue(m_vecStrMediaName[m_iCurrentMediaId * m_iMediaNum * 2 + i + m_iMediaNum], "cmp", m_iFps, 0, 0, 1, 1);
+		n_vecQueue[i]->AppendQueue(m_vecStrCommonMediaName[m_iCurrentMediaId * m_iMediaNum * 2 + i + m_iMediaNum], "cmp", m_iFps, 0, 0, 1, 1);
 		n_vecQueue[i]->SetCoords(m_iRectWidth / 2, m_iRectHeight / 2, 1, m_iRectWidth / 2, m_iRectHeight / 2, 1);
 		n_vecQueue[i]->SetStartTime(-1, 1);
 		n_vecQueue[i]->MediaSeek(0, 0, 1);
 	}
+
+	m_vecMainQueue[1]->NewQueue(-1, 1, m_vecQueue.size() + 1, 0, 1);
+	m_vecMainQueue[1]->AppendQueue(m_vecStrMainMediaName[m_iCurrentMediaId  * 2 + 1], "cmp", m_iFps, 0, 0, 1, 1);
+	m_vecMainQueue[1]->SetCoords(m_iRectWidth / 2, m_iRectHeight / 2, 1, m_iRectWidth / 2, m_iRectHeight / 2, 1);
+	m_vecMainQueue[1]->SetStartTime(-1, 1);
+	m_vecMainQueue[1]->MediaSeek(0, 0, 1);
 
 	m_PM_Hub->SendLoaded();
 
@@ -340,9 +409,10 @@ void deskMedia::clear()
 	m_bParity = false;
 	m_vecQueue.clear();
 	n_vecQueue.clear();
+	m_vecMainQueue.clear();
 	if (m_PM_Hub != NULL)
 	{
-	//	delete m_PM_Hub;
+		//	delete m_PM_Hub;
 		m_PM_Hub = NULL;
 	}
 }
