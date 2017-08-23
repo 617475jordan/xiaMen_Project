@@ -1,6 +1,8 @@
 #pragma once
 #include <opencv_all.h>
 #include "matchShape.h"
+#include "RegionGrowing.h"
+
 class drawing
 {
 public:
@@ -16,8 +18,9 @@ private:
 	vector<vector<Point>>     m_vecFilterContours;
 	vector<Rect>              m_vecRectangle;
 	vector<Rect>              m_vecRec;
-	double                     m_fPI = acos(-1);
-	double                    m_dAreaThreshold = 50;
+	vector<Vec4i>             m_vecHierarchy;
+	vector<Vec4i>             m_vecOutHierarchy;
+	double                     m_fPI = acos(-1.0);
 	char                      m_charPictureName[100] ;
 	matchShape                matchShape;
 	Scalar                    m_scalarLineColor = Scalar(255, 0, 0);
@@ -27,8 +30,12 @@ private:
 	int                       m_iRaduis = 4;
 	int                       m_iType = 8;
 	int                       m_iThickness = 1;
-	int                       m_iPictureNum = 4;
+	int                       m_iPictureNum = 1;
 
-#define                       m_strPictureName        "..\\data\\panda%d.png"
-	
+#define                       m_strPictureName        "..\\data\\coco2.png"
+
+private:
+	regionGrowing             m_regionGrowing;
+	int                       m_iGrowPoint = 120;
+	int                       m_iGrowJudge = 4;
 };

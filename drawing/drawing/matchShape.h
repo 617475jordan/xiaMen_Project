@@ -7,8 +7,8 @@ public:
 	matchShape();
 	~matchShape();
 	void                                 computeSimilarity();
-	void                                 findMainRectContours(Mat m_matMainImg);
-	void                                 findCommonRectContours(Mat m_matCommonImg);
+	bool                                 findMainRectContours(Mat m_matMainImg);
+	bool                                 findCommonRectContours(Mat m_matCommonImg);
 	double                               similarityValue ();
 	double                               isOk();
 private:
@@ -25,6 +25,4 @@ private:
 	double                               m_dReslutSimilarity;
 	double                               m_dMinSimliartyAreaTheshold=1;
 	double                               m_dMaxSimliartyAreaTheshold = 60;
-	char                                 m_charPictureName[100];
-	string                               m_strPictureName = "..\\data\\test%d.jpg";
 };

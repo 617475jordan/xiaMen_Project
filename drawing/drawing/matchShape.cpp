@@ -40,39 +40,58 @@ void matchShape::computeSimilarity()
 		m_dReslutSimilarity = 0;
 	else if (m_dReslutSimilarity >1)
 		m_dReslutSimilarity = 1;
-	//cout << "模版轮廓与待测试图像轮廓" << "的相似度:" << m_dReslutSimilarity << endl;//输出两个轮廓间的相似度 
+	cout << "模版轮廓与待测试图像轮廓" << "的相似度:" << m_dReslutSimilarity << endl;//输出两个轮廓间的相似度 
 }
 
-void matchShape::findMainRectContours(Mat m_matMainImg)
+bool matchShape::findMainRectContours(Mat m_matMainImg)
 {
 	m_vecMainPointContours.clear();
 	m_dMainArea = 0;
 	m_matMainImg.copyTo(m_matMainTmpImg);
-	cvtColor(m_matMainImg, m_matMainGrayImg, CV_BGR2GRAY);
+	cvtColor(m_matMainImg, m_matMainGrayImg, CV_RGB2GRAY);
 	threshold(m_matMainGrayImg, m_matMainGrayImg, m_iMinThreshold, m_iMaxThreshold, CV_THRESH_BINARY);//确保黑中找白
 	findContours(m_matMainGrayImg, m_vecMainPointContours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);//最外层轮廓  
 	//drawContours(m_matMainGrayImg, m_vecMainPointContours, -1, m_scalarColor, m_iThickness, m_iLineType);
-	for (unsigned int i= 0; i < m_vecMainPointContours.size(); i++)
+	if (m_vecMainPointContours.size() == 0)
 	{
-		if (contourArea(m_vecMainPointContours[i])>0)
-			m_dMainArea = m_dMainArea + contourArea(m_vecMainPointContours[i]);
+		return false;
 	}
+	else
+	{
+		for (unsigned int i = 0; i < m_vecMainPointContours.size(); i++)
+		{
+			if (contourArea(m_vecMainPointContours[i])>0)
+				m_dMainArea = m_dMainArea + contourArea(m_vecMainPointContours[i]);
+		}
+		return true;
+	}
+	
 }
 
-void matchShape::findCommonRectContours(Mat m_matCommonImg)
+bool matchShape::findCommonRectContours(Mat m_matCommonImg)
 {
+	resize(m_matCommonImg, m_matCommonImg, Size(320, 240));
 	m_vecCommonPointContours.clear();
 	m_dCommonArea = 0;
 	m_matCommonImg.copyTo(m_matCommonTmpImg);
-	cvtColor(m_matCommonImg, m_matCommonGrayImg, CV_BGR2GRAY);
+	cvtColor(m_matCommonImg, m_matCommonGrayImg, CV_RGB2GRAY);
 	threshold(m_matCommonGrayImg, m_matCommonGrayImg, m_iMinThreshold, m_iMaxThreshold, CV_THRESH_BINARY);//确保黑中找白
 	findContours(m_matCommonGrayImg, m_vecCommonPointContours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);//最外层轮廓  
 	//drawContours(m_matCommonGrayImg, m_vecCommonPointContours, -1, m_scalarColor, m_iThickness, m_iLineType);
-	for (unsigned int i = 0; i < m_vecCommonPointContours.size(); i++)
+	if (m_vecCommonPointContours.size() == 0)
 	{
-		if (contourArea(m_vecCommonPointContours[i])>0)
-			m_dCommonArea = m_dCommonArea + contourArea(m_vecCommonPointContours[i]);
+		return false;
 	}
+	else
+	{
+		for (unsigned int i = 0; i < m_vecCommonPointContours.size(); i++)
+		{
+			if (contourArea(m_vecCommonPointContours[i])>0)
+				m_dCommonArea = m_dCommonArea + contourArea(m_vecCommonPointContours[i]);
+		}
+		return true;
+	}
+
 }
 double matchShape::similarityValue()
 {
